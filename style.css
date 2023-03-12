@@ -9,7 +9,8 @@ body {
   color: #333;
   margin: 0;
   padding: 0;
-  background: rgb(154, 200, 216);
+  background: rgb(124, 181, 200);
+  /* background: rgb(154, 200, 216); */
   /* background-image: radial-gradient(
     rgba(96, 149, 170, 0.5) 2px,
     transparent 1px

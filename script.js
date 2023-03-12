@@ -7,6 +7,7 @@ const ROUNDS = 6;
 async function init() {
   let currentGuess = "";
   let currentRow = 0;
+  let isLoading = true;
 
   // Getting word of the day
   const res = await fetch("https://words.dev-apis.com/word-of-the-day");
@@ -14,8 +15,9 @@ async function init() {
   const word = resObj.word.toUpperCase();
   const wordParts = word.split("");
   let done = false;
+  isLoading = false;
 
-  setLoading(false);
+  setLoading(isLoading);
 
   function addLetter(letter) {
     if (currentGuess.length < ANSWER_LENGTH) {
@@ -37,19 +39,29 @@ async function init() {
     // length < 5 => do nothing
     if (currentGuess.length !== ANSWER_LENGTH) return;
 
-    // Win logic
-    if (currentGuess === word) {
-      // win
-      alert("you win!");
-      done = true;
+    // Validate the word
+    isLoading = true;
+    setLoading(isLoading);
+    const res = await fetch("https://words.dev-apis.com/validate-word", {
+      method: "POST",
+      body: JSON.stringify({ word: currentGuess }),
+    });
+
+    const resObj = await res.json();
+    const validWord = resObj.validWord;
+    // const { validWord } = resObj;
+
+    isLoading = false;
+    setLoading(isLoading);
+
+    if (!validWord) {
+      markInvalidWord();
       return;
     }
 
-    // TODO: validate the word
-
     const guessParts = currentGuess.split("");
     const map = makeMap(wordParts);
-    console.log(map);
+    //console.log(map);
 
     // Character color logic
 
@@ -73,16 +85,23 @@ async function init() {
       }
     }
 
+    // Win and Lose logic
+    if (currentGuess === word) {
+      // win
+      alert("you win!");
+      document.querySelector(".brand").classList.add("winner");
+      done = true;
+      return;
+    } else if (currentRow === ROUNDS) {
+      // lose
+      alert(`you lose, the word was ${word}`);
+      done = true;
+    }
+
     // else go to next row
     currentRow++;
     // reset guessed
     currentGuess = "";
-
-    // Lose logic
-    if (currentRow === ROUNDS) {
-      alert(`you lose, the word was ${word}`);
-      done = true;
-    }
   }
 
   function backspace() {
@@ -92,13 +111,27 @@ async function init() {
     letters[ANSWER_LENGTH * currentRow + currentGuess.length].innerText = "";
   }
 
+  // Animation for invalid word
+  function markInvalidWord() {
+    //alert("not a valid word!");
+    for (let i = 0; i < ANSWER_LENGTH; i++) {
+      letters[currentRow * ANSWER_LENGTH + i].classList.remove("invalid");
+
+      setTimeout(function () {
+        letters[currentRow * ANSWER_LENGTH + i].classList.add("invalid");
+      }, 10);
+    }
+  }
+
   // Get the key pressed
   document.addEventListener("keydown", function handleKeyPress(event) {
     const action = event.key;
-    console.log(action);
 
-    // keep the keys we want and ignore rest
+    // If loading or done then do nothing
+    if (done || isLoading) return;
+
     if (action === "Enter") {
+      // keep the keys we want and ignore rest
       commit();
     } else if (action === "Backspace") {
       backspace();
@@ -132,4 +165,5 @@ async function init() {
     return obj;
   }
 }
+
 init();
