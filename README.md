@@ -1,5 +1,5 @@
 # Overview
-Recreating the well known word game Wordle.
+Recreating the well known word game Wordle. I named it **Word Masters**.
 
 * There is a secret five letter word chosen
 * Players have six guesses to figure out the secret word. After six guesses, they lose
@@ -8,7 +8,10 @@ Recreating the well known word game Wordle.
 * It does account for however many of the letter exist in the word. For example, if the player guesses "SPOOL" and the word is "OVERT", one "O" is shown as yellow and the second one is not.
 * If the player guesses the right word, the player wins and the game is over.
 
-## The API
----
+# The API
+
 <b>GET</b> https://words.dev-apis.com/word-of-the-day
-<br>This gives the word of the day. It changes every night at midnight
+<br>This gives the word of the day. It changes every night at midnight.
+
+<b>POST</b> https://words.dev-apis.com/validate-word
+<br>This endpoint is used to validate the word entered by the user.
