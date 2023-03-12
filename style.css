@@ -9,11 +9,11 @@ body {
   color: #333;
   margin: 0;
   padding: 0;
-  background: rgb(116, 179, 204);
-  background-image: radial-gradient(
+  background: rgb(154, 200, 216);
+  /* background-image: radial-gradient(
     rgba(96, 149, 170, 0.5) 2px,
     transparent 1px
-  );
+  ); */
   background-size: 30px 30px;
   display: flex;
   flex-direction: column;
@@ -110,14 +110,16 @@ body {
 
 /* visibility hidden means the item is still there and taking up space
 but just not shown. display: none doesn't take up space */
-.hidden {
-  visibility: hidden;
-}
 
 .info-bar {
+  visibility: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.show {
+  visibility: visible;
 }
 
 /* winner animation */
